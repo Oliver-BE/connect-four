@@ -43,6 +43,8 @@ function startGame() {
     [0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0]
   ]
+  winningNumbers = []
+
   cellElements.forEach((cell, i) => {
     cell.id = i
     cell.classList.remove(YELLOW_CLASS)
@@ -85,9 +87,9 @@ function checkWin() {
   // https://codereview.stackexchange.com/questions/127091/java-connect-four-four-in-a-row-detection-algorithms
 
   // go through entire board, check for win
-  // note that here we start from the bottom left
-  // of the board (so just start from last row)
-  for (let row = 5; row >= 0; row--) {
+  // note that here we start from the top left of the board
+
+  for (let row = 0; row < 6; row++) {
     for (let col = 0; col < 7; col++) {
       let value = currentBoard[row][col]
       // skip over emtpy spots in grid
@@ -98,33 +100,110 @@ function checkWin() {
         value == currentBoard[row][col + 1] &&
         value == currentBoard[row][col + 2] &&
         value == currentBoard[row][col + 3]) {
+        // keep track of the cells that won
+        findWinningNumbers(row, col, "horizontal")
         return true
       }
 
-      // check for wins above (make sure we're in bounds)
+      // check for wins below current cell (make sure we're in bounds)
       if (row + 3 < HEIGHT) {
-        // check for veritcal win (straight up)
+        // check for veritcal win (straight down)
         if (value == currentBoard[row + 1][col] &&
           value == currentBoard[row + 2][col] &&
           value == currentBoard[row + 3][col]) {
+          findWinningNumbers(row, col, "vertical")
           return true
         }
-        // check for diagonal win (up and to the right)
+        // check for diagonal win (down and to the right)
         if (col + 3 < WIDTH &&
           value == currentBoard[row + 1][col + 1] &&
           value == currentBoard[row + 2][col + 2] &&
           value == currentBoard[row + 3][col + 3]) {
+          findWinningNumbers(row, col, "diagonal-right")
           return true
         }
-        // check for diagonal win (up and to the left)
+        // check for diagonal win (down and to the left)
         if (col - 3 >= 0 &&
           value == currentBoard[row + 1][col - 1] &&
           value == currentBoard[row + 2][col - 2] &&
           value == currentBoard[row + 3][col - 3]) {
+          findWinningNumbers(row, col, "diagonal-left")
           return true
         }
       }
     }
+  }
+}
+
+// goes through entire board and cell that caused
+// there to be a win to manually keep track of winning cell numbers
+function findWinningNumbers(row, col, winType) {
+
+  switch (winType) {
+    case "horizontal":
+      let countH = 0
+        for (let r = 0; r < 6; r++) {
+          for (let c = 0; c < 7; c++) {
+            // if this is one of the four winning numbers add it 
+            if ((r == row && c == col) ||
+              (r == row && c == col + 1) ||
+              (r == row && c == col + 2) ||
+              (r == row && c == col + 3)) {
+              winningNumbers.push(countH)
+            }
+            countH++
+          }
+        }
+        return
+      
+    case "vertical": 
+      let countV = 0
+      for (let r = 0; r < 6; r++) {
+        for (let c = 0; c < 7; c++) {
+          // if this is one of the four winning numbers add it 
+          if ((r == row && c == col) ||
+            (r == row + 1 && c == col) ||
+            (r == row + 2 && c == col) ||
+            (r == row + 3 && c == col)) {
+            winningNumbers.push(countV)
+          }
+          countV++
+        }
+      }
+      return
+      
+
+    case "diagonal-right": 
+      let countDR = 0
+      for (let r = 0; r < 6; r++) {
+        for (let c = 0; c < 7; c++) {
+          // if this is one of the four winning numbers add it 
+          if ((r == row && c == col) ||
+            (r == row + 1 && c == col + 1) ||
+            (r == row + 2 && c == col + 2) ||
+            (r == row + 3 && c == col + 3)) {
+            winningNumbers.push(countDR)
+          }
+          countDR++
+        }
+      }
+      return
+
+    case "diagonal-left": 
+      let countDL = 0
+      for (let r = 0; r < 6; r++) {
+        for (let c = 0; c < 7; c++) {
+          // if this is one of the four winning numbers add it 
+          if ((r == row && c == col) ||
+            (r == row + 1 && c == col - 1) ||
+            (r == row + 2 && c == col - 2) ||
+            (r == row + 3 && c == col - 3)) {
+            winningNumbers.push(countDL)
+          }
+          countDL++
+        }
+      }
+      return
   }
 }
 
@@ -143,10 +222,12 @@ function endGame(draw) {
     // check who won
     if (redTurn) {
       winningMessageTextElement.innerText = "Red Wins!"
-      winningMessageTextElement.setAttribute('style', 'color:red')
+      // can change this to red
+      winningMessageTextElement.setAttribute('style', 'color:white')
     } else {
       winningMessageTextElement.innerText = "Yellow Wins!"
-      winningMessageTextElement.setAttribute('style', 'color:yellow')
+      // can change this to yellow
+      winningMessageTextElement.setAttribute('style', 'color:white')
     }
   }
   // would be nice to have "Wins! in white text"
@@ -154,6 +235,8 @@ function endGame(draw) {
   // content.setAttribute('style', 'color:white')
   // winningMessageTextElement.appendChild(content)
   winningMessageElement.classList.add('show')
+
+  // for each winning cell add an outline by adding .winner class
   cellElements.forEach((cell, i) => {
     // winning numbers is an array of each cell number that won
     if (winningNumbers.includes(i)) {
@@ -178,7 +261,6 @@ function placeMark(cell, currentClass) {
 
   // update our currentBoard
   currentBoard[legalRowNum][columnNumber] = currentClass
-  console.log(currentBoard)
 
   // based on placed piece, update our visualization
   updateBoardDrawing()
