@@ -1,0 +1,168 @@
+/* https://github.com/josephgutierrez/connect-four */
+/* font-family: 'Julius Sans One', sans-serif;
+font-family: 'Merriweather', serif;
+font-family: 'Montserrat', sans-serif;
+font-family: 'Sacramento', cursive; */
+*, *::after, *::before {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.navbar {
+  position: relative;
+  background-color: #f7f7f7;
+  width: 100%;
+  height: 4em;
+  box-shadow: 0 0.25em 0.3125em rgba(0, 0, 0, 0.3);
+}
+
+.navbar-text {
+  position: absolute;
+  font-size: 2.25em;
+  color: #1c1c1c;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.navbar-text.oliver {
+  position: absolute;
+  font-size: 1em;
+  color: #1c1c1c;
+  top: 50%;
+  right: -45%;
+  transform: translate(-50%, -50%);
+}
+
+a {
+  text-decoration: none;
+  color: #1c1c1c;
+}
+
+a:visited {
+  color: #1c1c1c;
+}
+
+:root {
+  --cell-size: 80px;
+  --mark-size: calc(var(--cell-size) * .75);
+}
+
+.board {
+  width: 100vw;
+  height: 85vh;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  grid-template-columns: repeat(7, auto);
+}
+
+/********* CELL *********/
+.cell {
+  width: var(--cell-size);
+  height: var(--cell-size);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  background-color: lightblue;
+  /*box-shadow: 0 0.25em 0.3125em rgba(0, 0, 0, 0.3);*/
+}
+
+.cell::after {
+  content: '';
+  width: var(--mark-size);
+  height: var(--mark-size);
+  position: absolute;
+  background-color: white;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.cell:first-child {
+  border-top-left-radius: 25%;
+}
+
+.cell:nth-child(7) {
+  border-top-right-radius: 25%;
+}
+
+.cell:nth-child(36) {
+  border-bottom-left-radius: 25%;
+}
+
+.cell:last-child {
+  border-bottom-right-radius: 25%;
+}
+
+.cell.red::after,
+.cell.yellow::after {
+  cursor: default;
+  /*not-allowed*/
+}
+
+.cell.red::after {
+  background-color: red;
+}
+
+.cell.yellow::after {
+  background-color: yellow;
+}
+
+.board.red .cell:not(.red):not(.yellow):hover::after {
+  background-color: pink;
+}
+
+.board.yellow .cell:not(.red):not(.yellow):hover::after {
+  background-color: lightyellow;
+}
+
+.cell.winner::before {
+  content: '';
+  width: calc(var(--mark-size) * 1.2);
+  height: calc(var(--mark-size) * 1.2);
+  position: absolute;
+  background-color: white;
+  border-radius: 50%;
+}
+
+/* MESSAGE */
+.winning-message {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, .5);
+  justify-content: flex-end;
+  color: white;
+  align-items: center;
+  font-size: 5rem;
+  flex-direction: column;
+}
+
+.winning-message.show {
+  display: flex;
+}
+
+button {
+  font-size: 3rem;
+  cursor: pointer;
+  border: 2px solid black;
+  padding: .25em .5em;
+  margin: 1.3em;
+  background-color: white;
+  font-family: 'Montserrat', sans-serif;
+}
+
+button:hover {
+  background-color: black;
+  color: white;
+  border-color: white;
+}
