@@ -12,7 +12,8 @@ body {
   font-family: 'Montserrat', sans-serif;
 }
 
-.navbar {
+/* old navbar stuff when oliver came second */
+/* .navbar {
   position: relative;
   background-color: #f7f7f7;
   width: 100%;
@@ -36,6 +37,29 @@ body {
   top: 50%;
   right: -45%;
   transform: translate(-50%, -50%);
+} */
+.navbar {
+  /* position: relative; */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  background-color: #f7f7f7;
+  width: 100%;
+  padding: 0.75em;
+  box-shadow: 0 0.25em 0.3125em rgba(0, 0, 0, 0.3);
+}
+
+.navbar-text {
+  font-size: 2.25em;
+  color: #1c1c1c;
+}
+
+.navbar-text.oliver {
+  position: absolute;
+  font-size: 1em;
+  color: #1c1c1c;
+  left: 2%;
 }
 
 a {
