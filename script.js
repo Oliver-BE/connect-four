@@ -19,6 +19,49 @@ const restartButton = document.getElementById('restartButton')
 let redTurn
 let currentBoard
 let winningNumbers = []
+let muteButtonClicked = false;
+let marioButtonClicked = false;
+
+$('#muteButton').on('click', function() {
+  if (muteButtonClicked) {
+    $('img.mute').removeClass('selected');
+    muteButtonClicked = false;
+  } else {
+    $('img.mute').addClass('selected');
+    muteButtonClicked = true;
+  }
+});
+
+$('#marioButton').on('click', function() {
+  if (marioButtonClicked) {
+    $('img.mario').removeClass('selected');
+    marioButtonClicked = false;
+  } else {
+    $('img.mario').addClass('selected');
+    marioButtonClicked = true;
+  }
+});
+
+function sound(src) {
+  this.sound = document.createElement("audio");
+  this.sound.src = src;
+  this.sound.setAttribute("preload", "auto");
+  this.sound.setAttribute("controls", "none");
+  this.sound.style.display = "none";
+  document.body.appendChild(this.sound);
+  this.play = function() {
+    this.sound.play();
+  }
+  this.stop = function() {
+    this.sound.pause();
+  }
+}
+
+let clickSound = new sound("media/click.mp3")
+let smmWin = new sound("media/smmWin.mp3")
+let winSound = new sound("media/win.mp3")
+let drawSound = new sound("media/drawSound.mp3")
+let coinSound = new sound("media/coin.mp3")
 
 //----------------------------------------//
 //----------------RUN GAME----------------//
@@ -45,6 +88,7 @@ function startGame() {
   ]
   winningNumbers = []
 
+
   cellElements.forEach((cell, i) => {
     cell.id = i
     cell.classList.remove(YELLOW_CLASS)
@@ -59,14 +103,30 @@ function startGame() {
 
 function handleClick(e) {
 
+  if (!muteButtonClicked) {
+    if (marioButtonClicked) {
+      coinSound.play()
+    } else {
+      clickSound.play()
+    }
+  }
   const cell = e.target
   const currentClass = redTurn ? RED_CLASS : YELLOW_CLASS
 
   placeMark(cell, currentClass)
 
   if (checkWin()) {
+
+    if (!muteButtonClicked) {
+      if (marioButtonClicked) {
+        smmWin.play()
+      } else {
+        winSound.play()
+      }
+    }
     endGame(false)
   } else if (isDraw()) {
+    if (!muteButtonClicked) drawSound.play()
     endGame(true)
   } else {
     swapTurns()
@@ -142,25 +202,25 @@ function findWinningNumbers(row, col, winType) {
   switch (winType) {
     case "horizontal":
       let countH = 0
-        for (let r = 0; r < 6; r++) {
-          for (let c = 0; c < 7; c++) {
-            // if this is one of the four winning numbers add it 
-            if ((r == row && c == col) ||
-              (r == row && c == col + 1) ||
-              (r == row && c == col + 2) ||
-              (r == row && c == col + 3)) {
-              winningNumbers.push(countH)
-            }
-            countH++
+      for (let r = 0; r < 6; r++) {
+        for (let c = 0; c < 7; c++) {
+          // if this is one of the four winning numbers add it
+          if ((r == row && c == col) ||
+            (r == row && c == col + 1) ||
+            (r == row && c == col + 2) ||
+            (r == row && c == col + 3)) {
+            winningNumbers.push(countH)
           }
+          countH++
         }
-        return
-      
-    case "vertical": 
+      }
+      return
+
+    case "vertical":
       let countV = 0
       for (let r = 0; r < 6; r++) {
         for (let c = 0; c < 7; c++) {
-          // if this is one of the four winning numbers add it 
+          // if this is one of the four winning numbers add it
           if ((r == row && c == col) ||
             (r == row + 1 && c == col) ||
             (r == row + 2 && c == col) ||
@@ -171,13 +231,13 @@ function findWinningNumbers(row, col, winType) {
         }
       }
       return
-      
 
-    case "diagonal-right": 
+
+    case "diagonal-right":
       let countDR = 0
       for (let r = 0; r < 6; r++) {
         for (let c = 0; c < 7; c++) {
-          // if this is one of the four winning numbers add it 
+          // if this is one of the four winning numbers add it
           if ((r == row && c == col) ||
             (r == row + 1 && c == col + 1) ||
             (r == row + 2 && c == col + 2) ||
@@ -189,11 +249,11 @@ function findWinningNumbers(row, col, winType) {
       }
       return
 
-    case "diagonal-left": 
+    case "diagonal-left":
       let countDL = 0
       for (let r = 0; r < 6; r++) {
         for (let c = 0; c < 7; c++) {
-          // if this is one of the four winning numbers add it 
+          // if this is one of the four winning numbers add it
           if ((r == row && c == col) ||
             (r == row + 1 && c == col - 1) ||
             (r == row + 2 && c == col - 2) ||
