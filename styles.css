@@ -223,7 +223,7 @@ a:visited {
 
 @media (max-width: 400px) {
   .navbar-text {
-    display: none;
+    font-size: 1.5em;
   }
 
   .navbar {
@@ -234,10 +234,6 @@ a:visited {
 @media (max-width: 390px) {
   :root {
     --cell-size: 40px;
-  }
-
-  .navbar {
-    display: none;
   }
 }
 
