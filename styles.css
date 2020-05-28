@@ -195,15 +195,10 @@ a:visited {
   border-color: white;
 }
 
-/********* Media events *********/
+/********* Media queries *********/
+/* width */
 @media (max-width: 680px) {
   .navbar-text.oliver {
-    display: none;
-  }
-}
-
-@media (max-width: 510px) {
-  #marioButton {
     display: none;
   }
 }
@@ -214,6 +209,49 @@ a:visited {
   }
 }
 
+@media (max-width: 530px) {
+  :root {
+    --cell-size: 50px;
+  }
+}
+
+@media (max-width: 510px) {
+  #marioButton {
+    display: none;
+  }
+}
+
+@media (max-width: 400px) {
+  .navbar-text {
+    display: none;
+  }
+
+  .navbar {
+    height: 68px;
+  }
+}
+
+@media (max-width: 390px) {
+  :root {
+    --cell-size: 40px;
+  }
+
+  .navbar {
+    display: none;
+  }
+}
+
+@media (max-width: 295px) {
+  :root {
+    --cell-size: 30px;
+  }
+
+  .navbar {
+    display: none;
+  }
+}
+
+/* height */
 @media (max-height: 590px) {
   .navbar {
     display: none;
