@@ -51,7 +51,7 @@ body {
 
 img {
   width: 50px;
-  opacity: 0.5;
+  opacity: 0.25;
 }
 
 img.selected {
