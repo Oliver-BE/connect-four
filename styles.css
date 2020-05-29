@@ -54,9 +54,6 @@ img {
   opacity: 0.5;
 }
 
-/* img:hover {
-  opacity: 1;
-} */
 img.selected {
   opacity: 1;
 }
@@ -80,6 +77,10 @@ a {
 
 a:visited {
   color: #1c1c1c;
+}
+
+a:hover {
+  font-weight: bolder;
 }
 
 /********* BOARD *********/
